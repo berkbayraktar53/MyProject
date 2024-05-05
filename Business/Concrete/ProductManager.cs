@@ -38,7 +38,7 @@ namespace Business.Concrete
 
         public IDataResult<Product> GetById(int productId)
         {
-            return new SuccessDataResult<Product>(_productDal.Get(p => p.ProductId == productId));
+            return new SuccessDataResult<Product>(_productDal.Get(p => p.ProductID == productId));
         }
 
         public IDataResult<List<Product>> GetList()
@@ -48,7 +48,7 @@ namespace Business.Concrete
 
         public IDataResult<List<Product>> GetListByCategory(int categoryId)
         {
-            return new SuccessDataResult<List<Product>>([.. _productDal.GetList(p => p.CategoryId == categoryId)]);
+            return new SuccessDataResult<List<Product>>([.. _productDal.GetList(p => p.CategoryID == categoryId)]);
         }
 
         public IResult Update(Product product)

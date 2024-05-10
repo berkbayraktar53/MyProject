@@ -15,5 +15,12 @@
         public readonly static string ProductCouldNotBeAdded = "Ürün eklenemedi";
         public readonly static string ProductCouldNotBeDeleted = "Ürün silinemedi";
         public readonly static string ProductCouldNotBeUpdated = "Ürün güncellenemedi";
+
+        public readonly static string PasswordError = "Şifre hatalı";
+        public readonly static string SuccessfulLogin = "Giriş başarılı";
+        public readonly static string UserRegistered = "Kulanıcı kaydedildi";
+        public readonly static string UserNotFound = "Kullanıcı bulunamadı";
+        public readonly static string AccessTokenCreated = "Access token oluşturuldu";
+        public readonly static string UserAlreadyExists = "Bu kullanıcı zaten mevcut";
     }
 }

@@ -10,6 +10,7 @@ namespace Business.Concrete
     {
         private readonly IProductDal _productDal = productDal;
 
+        //[ValidationAspect(typeof(ProductValidator))]
         public IResult Add(Product product)
         {
             try

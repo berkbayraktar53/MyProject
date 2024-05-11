@@ -1,4 +1,6 @@
 using Autofac;
+using Core.Extensions;
+using Core.DependencyResolvers;
 using Core.Utilities.Security.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using Core.Utilities.Security.Encryption;
@@ -36,6 +38,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     }
 );
 #endregion
+builder.Services.AddDependencyResolvers([new CoreModule()]);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 //////////////////////////////////////////////////////////////////////////////////////////////

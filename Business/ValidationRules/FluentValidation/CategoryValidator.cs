@@ -7,11 +7,11 @@ namespace Business.ValidationRules.FluentValidation
     {
         public CategoryValidator()
         {
-            RuleFor(c => c.CategoryName).NotEmpty().WithMessage("Kategori adı boş geçilemez");
+            RuleFor(c => c.CategoryName).NotEmpty().WithMessage("Kategori adı boş geçilemez.");
             RuleFor(c => c.CategoryName).Length(2, 30);
-            RuleFor(c => c.Description).NotEmpty().WithMessage("Kategori açıklaması boş geçilemez");
+            RuleFor(c => c.Description).NotEmpty().WithMessage("Kategori açıklaması boş geçilemez.");
             RuleFor(c => c.CategoryName).Length(2, 60);
-            RuleFor(c => c.CategoryName).Must(StartsWithA).WithMessage("Kategori adı A ile başlamalıdır");
+            RuleFor(c => c.CategoryName).Must(StartsWithA).WithMessage("Kategori adı A ile başlamalı.");
         }
 
         private bool StartsWithA(string arg)

@@ -3,6 +3,7 @@ using Entities.Concrete;
 using Business.Constants;
 using DataAccess.Abstract;
 using Core.Utilities.Results;
+using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Validation;
 using Business.ValidationRules.FluentValidation;
 
@@ -12,7 +13,8 @@ namespace Business.Concrete
     {
         private readonly ICategoryDal _categoryDal = categoryDal;
 
-        [ValidationAspect(typeof(CategoryValidator), Priority = 1)]
+        [ValidationAspect(typeof(CategoryValidator))]
+        [CacheRemoveAspect("ICategoryService.Get")]
         public IResult Add(Category category)
         {
             try
@@ -26,6 +28,7 @@ namespace Business.Concrete
             }
         }
 
+        [CacheRemoveAspect("ICategoryService.Get")]
         public IResult Delete(Category category)
         {
             try
@@ -39,17 +42,20 @@ namespace Business.Concrete
             }
         }
 
+        [CacheAspect()]
         public IDataResult<Category> GetById(int categoryId)
         {
             return new SuccessDataResult<Category>(_categoryDal.Get(p => p.CategoryID == categoryId));
         }
 
+        [CacheAspect()]
         public IDataResult<List<Category>> GetList()
         {
             return new SuccessDataResult<List<Category>>([.. _categoryDal.GetList()]);
         }
 
-        [ValidationAspect(typeof(CategoryValidator), Priority = 1)]
+        [ValidationAspect(typeof(CategoryValidator))]
+        [CacheRemoveAspect("ICategoryService.Get")]
         public IResult Update(Category category)
         {
             try

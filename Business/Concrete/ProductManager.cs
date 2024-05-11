@@ -4,6 +4,7 @@ using Business.Constants;
 using DataAccess.Abstract;
 using Core.Utilities.Results;
 using Core.Aspects.Autofac.Validation;
+using Core.Aspects.Autofac.Transaction;
 using Business.ValidationRules.FluentValidation;
 
 namespace Business.Concrete
@@ -52,6 +53,14 @@ namespace Business.Concrete
         public IDataResult<List<Product>> GetListByCategory(int categoryId)
         {
             return new SuccessDataResult<List<Product>>([.. _productDal.GetList(p => p.CategoryID == categoryId)]);
+        }
+
+        [TransactionScopeAspect]
+        public IResult TransactionalOperation(Product product)
+        {
+            _productDal.Update(product);
+            _productDal.Add(product);
+            return new SuccessResult(Messages.ProductUpdated);
         }
 
         [ValidationAspect(typeof(ProductValidator), Priority = 1)]

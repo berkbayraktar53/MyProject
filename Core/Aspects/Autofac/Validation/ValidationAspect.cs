@@ -31,11 +31,11 @@ namespace Core.Aspects.Autofac.Validation
                 ValidationTool.Validate(validator, entity, out IList<ValidationFailure> failures);
                 if (failures != null && failures.Any())
                 {
-                    string errorMessage = string.Join(", ", failures.Select(f => f.ErrorMessage));
+                    string errorMessage = string.Join(Environment.NewLine, failures.Select(f => f.ErrorMessage));
                     invocation.ReturnValue = new ErrorResult(errorMessage);
                     return;
+
                 }
-                //ValidationTool.Validate(validator, entity);
             }
         }
     }

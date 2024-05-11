@@ -3,6 +3,8 @@ using Entities.Concrete;
 using Business.Constants;
 using DataAccess.Abstract;
 using Core.Utilities.Results;
+using Core.Aspects.Autofac.Validation;
+using Business.ValidationRules.FluentValidation;
 
 namespace Business.Concrete
 {
@@ -10,6 +12,7 @@ namespace Business.Concrete
     {
         private readonly ICategoryDal _categoryDal = categoryDal;
 
+        [ValidationAspect(typeof(CategoryValidator), Priority = 1)]
         public IResult Add(Category category)
         {
             try
@@ -46,6 +49,7 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Category>>([.. _categoryDal.GetList()]);
         }
 
+        [ValidationAspect(typeof(CategoryValidator), Priority = 1)]
         public IResult Update(Category category)
         {
             try

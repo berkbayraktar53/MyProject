@@ -3,6 +3,8 @@ using Entities.Concrete;
 using Business.Constants;
 using DataAccess.Abstract;
 using Core.Utilities.Results;
+using Core.Aspects.Autofac.Validation;
+using Business.ValidationRules.FluentValidation;
 
 namespace Business.Concrete
 {
@@ -10,7 +12,7 @@ namespace Business.Concrete
     {
         private readonly IProductDal _productDal = productDal;
 
-        //[ValidationAspect(typeof(ProductValidator))]
+        [ValidationAspect(typeof(ProductValidator), Priority = 1)]
         public IResult Add(Product product)
         {
             try
@@ -52,6 +54,7 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Product>>([.. _productDal.GetList(p => p.CategoryID == categoryId)]);
         }
 
+        [ValidationAspect(typeof(ProductValidator), Priority = 1)]
         public IResult Update(Product product)
         {
             try

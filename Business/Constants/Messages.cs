@@ -18,6 +18,7 @@
 
         public readonly static string PasswordError = "Şifre hatalı.";
         public readonly static string SuccessfulLogin = "Giriş başarılı.";
+        public readonly static string AuthorizationDenied = "Yetkiniz yok";
         public readonly static string UserNotFound = "Kullanıcı bulunamadı.";
         public readonly static string UserRegistered = "Kulanıcı kaydedildi.";
         public readonly static string AccessTokenCreated = "Access token oluşturuldu.";

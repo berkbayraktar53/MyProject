@@ -5,6 +5,7 @@ using DataAccess.Abstract;
 using Core.Utilities.Results;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Validation;
+using Business.BusinessAspects.Autofac;
 using Core.Aspects.Autofac.Transaction;
 using Business.ValidationRules.FluentValidation;
 
@@ -14,8 +15,9 @@ namespace Business.Concrete
     {
         private readonly IProductDal _productDal = productDal;
 
-        [ValidationAspect(typeof(ProductValidator))]
-        [CacheRemoveAspect("IProductService.Get")]
+        [SecuredOperation("Product.Add,Admin", Priority = 1)]
+        [ValidationAspect(typeof(ProductValidator), Priority = 2)]
+        [CacheRemoveAspect("IProductService.Get", Priority = 3)]
         public IResult Add(Product product)
         {
             try
@@ -29,7 +31,8 @@ namespace Business.Concrete
             }
         }
 
-        [CacheRemoveAspect("IProductService.Get")]
+        [SecuredOperation("Product.Delete,Admin", Priority = 1)]
+        [CacheRemoveAspect("IProductService.Get", Priority = 2)]
         public IResult Delete(Product product)
         {
             try
@@ -43,26 +46,30 @@ namespace Business.Concrete
             }
         }
 
-        [CacheAspect()]
+        [SecuredOperation("Product.GetById,Admin", Priority = 1)]
+        [CacheAspect(Priority = 2)]
         public IDataResult<Product> GetById(int productId)
         {
             return new SuccessDataResult<Product>(_productDal.Get(p => p.ProductID == productId));
         }
 
-        [CacheAspect()]
+        [SecuredOperation("Product.GetList,Admin", Priority = 1)]
+        [CacheAspect(Priority = 2)]
         public IDataResult<List<Product>> GetList()
         {
             return new SuccessDataResult<List<Product>>([.. _productDal.GetList()]);
         }
 
-        [CacheAspect()]
+        [SecuredOperation("Product.GetListByCategory,Admin", Priority = 1)]
+        [CacheAspect(Priority = 2)]
         public IDataResult<List<Product>> GetListByCategory(int categoryId)
         {
             return new SuccessDataResult<List<Product>>([.. _productDal.GetList(p => p.CategoryID == categoryId)]);
         }
 
+        [SecuredOperation("Product.Add,Product.Update,Admin", Priority = 1)]
+        [CacheRemoveAspect("IProductService.Get", Priority = 2)]
         [TransactionScopeAspect]
-        [CacheRemoveAspect("IProductService.Get")]
         public IResult TransactionalOperation(Product product)
         {
             _productDal.Update(product);
@@ -70,8 +77,9 @@ namespace Business.Concrete
             return new SuccessResult(Messages.ProductUpdated);
         }
 
-        [ValidationAspect(typeof(ProductValidator))]
-        [CacheRemoveAspect("IProductService.Get")]
+        [SecuredOperation("Product.Update,Admin", Priority = 1)]
+        [ValidationAspect(typeof(ProductValidator), Priority = 2)]
+        [CacheRemoveAspect("IProductService.Get", Priority = 3)]
         public IResult Update(Product product)
         {
             try

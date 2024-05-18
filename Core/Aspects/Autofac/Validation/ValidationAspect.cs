@@ -34,7 +34,10 @@ namespace Core.Aspects.Autofac.Validation
                     string errorMessage = string.Join(Environment.NewLine, failures.Select(f => f.ErrorMessage));
                     invocation.ReturnValue = new ErrorResult(errorMessage);
                     return;
-
+                }
+                else
+                {
+                    invocation.ReturnValue = new SuccessResult();
                 }
             }
         }

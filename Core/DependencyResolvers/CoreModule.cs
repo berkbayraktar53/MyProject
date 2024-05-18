@@ -1,4 +1,5 @@
 ﻿using Core.Utilities.IoC;
+using Microsoft.AspNetCore.Http;
 using Core.CrossCuttingConcerns.Caching;
 using Microsoft.Extensions.DependencyInjection;
 using Core.CrossCuttingConcerns.Caching.Microsoft;
@@ -11,6 +12,7 @@ namespace Core.DependencyResolvers
         {
             services.AddMemoryCache();
             services.AddSingleton<ICacheManager, MemoryCacheManager>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
     }
 }

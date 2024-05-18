@@ -5,6 +5,7 @@ using DataAccess.Abstract;
 using Core.Utilities.Results;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Validation;
+using Business.BusinessAspects.Autofac;
 using Business.ValidationRules.FluentValidation;
 
 namespace Business.Concrete
@@ -13,8 +14,9 @@ namespace Business.Concrete
     {
         private readonly ICategoryDal _categoryDal = categoryDal;
 
-        [ValidationAspect(typeof(CategoryValidator))]
-        [CacheRemoveAspect("ICategoryService.Get")]
+        [SecuredOperation("Category.Add,Admin", Priority = 1)]
+        [ValidationAspect(typeof(CategoryValidator), Priority = 2)]
+        [CacheRemoveAspect("ICategoryService.Get", Priority = 3)]
         public IResult Add(Category category)
         {
             try
@@ -28,7 +30,8 @@ namespace Business.Concrete
             }
         }
 
-        [CacheRemoveAspect("ICategoryService.Get")]
+        [SecuredOperation("Category.Delete,Admin", Priority = 1)]
+        [CacheRemoveAspect("ICategoryService.Get", Priority = 2)]
         public IResult Delete(Category category)
         {
             try
@@ -42,20 +45,23 @@ namespace Business.Concrete
             }
         }
 
-        [CacheAspect()]
+        [SecuredOperation("Category.GetById,Admin", Priority = 1)]
+        [CacheAspect(Priority = 2)]
         public IDataResult<Category> GetById(int categoryId)
         {
             return new SuccessDataResult<Category>(_categoryDal.Get(p => p.CategoryID == categoryId));
         }
 
-        [CacheAspect()]
+        [SecuredOperation("Category.GetList,Admin", Priority = 1)]
+        [CacheAspect(Priority = 2)]
         public IDataResult<List<Category>> GetList()
         {
             return new SuccessDataResult<List<Category>>([.. _categoryDal.GetList()]);
         }
 
-        [ValidationAspect(typeof(CategoryValidator))]
-        [CacheRemoveAspect("ICategoryService.Get")]
+        [SecuredOperation("Category.Update,Admin", Priority = 1)]
+        [ValidationAspect(typeof(CategoryValidator), Priority = 2)]
+        [CacheRemoveAspect("ICategoryService.Get", Priority = 3)]
         public IResult Update(Category category)
         {
             try

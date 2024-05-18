@@ -16,7 +16,7 @@ namespace Core.Utilities.Interceptors
             OnBefore(invocation);
             try
             {
-                if (invocation.ReturnValue != null && invocation.ReturnValue.GetType() == typeof(ErrorResult))
+                if (invocation.ReturnValue.GetType() == typeof(ErrorResult) || (invocation.ReturnValue.GetType().IsGenericType && invocation.ReturnValue.GetType().GetGenericTypeDefinition() == typeof(ErrorDataResult<>)))
                 {
                     isSuccess = false;
                     return;

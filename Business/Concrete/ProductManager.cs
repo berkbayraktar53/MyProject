@@ -69,7 +69,7 @@ namespace Business.Concrete
 
         [SecuredOperation("Product.Add,Product.Update,Admin", Priority = 1)]
         [CacheRemoveAspect("IProductService.Get", Priority = 2)]
-        [TransactionScopeAspect]
+        [TransactionScopeAspect(Priority = 3)]
         public IResult TransactionalOperation(Product product)
         {
             _productDal.Update(product);

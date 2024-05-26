@@ -6,6 +6,7 @@ using Core.Utilities.Results;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Validation;
 using Business.BusinessAspects.Autofac;
+using Core.Aspects.Autofac.Performance;
 using Business.ValidationRules.FluentValidation;
 
 namespace Business.Concrete
@@ -54,6 +55,7 @@ namespace Business.Concrete
 
         [SecuredOperation("Category.GetList,Admin", Priority = 1)]
         [CacheAspect(Priority = 2)]
+        [PerformanceAspect(interval: 5, Priority = 3)]
         public IDataResult<List<Category>> GetList()
         {
             return new SuccessDataResult<List<Category>>([.. _categoryDal.GetList()]);

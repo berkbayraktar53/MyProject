@@ -4,10 +4,12 @@ using Business.Constants;
 using DataAccess.Abstract;
 using Core.Utilities.Results;
 using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Logging;
 using Core.Aspects.Autofac.Validation;
 using Business.BusinessAspects.Autofac;
 using Core.Aspects.Autofac.Performance;
 using Business.ValidationRules.FluentValidation;
+using Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
 
 namespace Business.Concrete
 {
@@ -48,6 +50,7 @@ namespace Business.Concrete
 
         [SecuredOperation("Category.GetById,Admin", Priority = 1)]
         [CacheAspect(Priority = 2)]
+        [LogAspect(typeof(DatabaseLogger), Priority = 3)]
         public IDataResult<Category> GetById(int categoryId)
         {
             return new SuccessDataResult<Category>(_categoryDal.Get(p => p.CategoryID == categoryId));
@@ -55,7 +58,8 @@ namespace Business.Concrete
 
         [SecuredOperation("Category.GetList,Admin", Priority = 1)]
         [CacheAspect(Priority = 2)]
-        [PerformanceAspect(interval: 5, Priority = 3)]
+        [LogAspect(typeof(DatabaseLogger), Priority = 3)]
+        [PerformanceAspect(interval: 5, Priority = 4)]
         public IDataResult<List<Category>> GetList()
         {
             return new SuccessDataResult<List<Category>>([.. _categoryDal.GetList()]);

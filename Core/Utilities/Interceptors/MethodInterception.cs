@@ -19,14 +19,14 @@ namespace Core.Utilities.Interceptors
             OnBefore(invocation);
             try
             {
-                if (invocation.ReturnValue.GetType() == typeof(ErrorResult) || (invocation.ReturnValue.GetType().IsGenericType && invocation.ReturnValue.GetType().GetGenericTypeDefinition() == typeof(ErrorDataResult<>)))
+                if (invocation.ReturnValue != null && (invocation.ReturnValue.GetType() == typeof(ErrorResult) || (invocation.ReturnValue.GetType().IsGenericType && invocation.ReturnValue.GetType().GetGenericTypeDefinition() == typeof(ErrorDataResult<>))))
                 {
                     isSuccess = false;
                     return;
                 }
                 invocation.Proceed();
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
                 isSuccess = false;
                 OnException(invocation, e);

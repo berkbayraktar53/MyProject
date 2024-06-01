@@ -4,13 +4,11 @@ using Business.Constants;
 using DataAccess.Abstract;
 using Core.Utilities.Results;
 using Core.Aspects.Autofac.Caching;
-using Core.Aspects.Autofac.Logging;
 using Core.Aspects.Autofac.Validation;
 using Business.BusinessAspects.Autofac;
 using Core.Aspects.Autofac.Performance;
 using Core.Aspects.Autofac.Transaction;
 using Business.ValidationRules.FluentValidation;
-using Core.CrossCuttingConcerns.Logging.Log4Net.Loggers;
 
 namespace Business.Concrete
 {
@@ -51,7 +49,6 @@ namespace Business.Concrete
 
         [SecuredOperation("Product.GetById,Admin", Priority = 1)]
         [CacheAspect(Priority = 2)]
-        [LogAspect(typeof(DatabaseLogger), Priority = 3)]
         public IDataResult<Product> GetById(int productId)
         {
             return new SuccessDataResult<Product>(_productDal.Get(p => p.ProductID == productId));
@@ -59,8 +56,7 @@ namespace Business.Concrete
 
         [SecuredOperation("Product.GetList,Admin", Priority = 1)]
         [CacheAspect(Priority = 2)]
-        [LogAspect(typeof(DatabaseLogger), Priority = 3)]
-        [PerformanceAspect(interval: 5, Priority = 4)]
+        [PerformanceAspect(interval: 5, Priority = 3)]
         public IDataResult<List<Product>> GetList()
         {
             return new SuccessDataResult<List<Product>>([.. _productDal.GetList()]);

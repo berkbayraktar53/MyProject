@@ -3,6 +3,7 @@ using Entities.Concrete;
 using Business.Constants;
 using DataAccess.Abstract;
 using Core.Utilities.Results;
+using Core.Utilities.Business;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Validation;
 using Business.BusinessAspects.Autofac;
@@ -22,6 +23,11 @@ namespace Business.Concrete
         {
             try
             {
+                IResult result = BusinessRules.Run(CheckIfCategoryNameExists(category.CategoryName));
+                if (result != null)
+                {
+                    return result;
+                }
                 _categoryDal.Add(category);
                 return new SuccessResult(Messages.CategoryAdded);
             }
@@ -75,6 +81,16 @@ namespace Business.Concrete
             {
                 return new ErrorResult(Messages.CategoryCouldNotBeUpdated);
             }
+        }
+
+        private IResult CheckIfCategoryNameExists(string categoryName)
+        {
+            var result = _categoryDal.GetList(x => x.CategoryName == categoryName).Any();
+            if (result)
+            {
+                return new ErrorResult(Messages.CategoryNameAlreadyExists);
+            }
+            return new SuccessResult();
         }
     }
 }

@@ -3,6 +3,7 @@ using Entities.Concrete;
 using Business.Constants;
 using DataAccess.Abstract;
 using Core.Utilities.Results;
+using Core.Utilities.Business;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Validation;
 using Business.BusinessAspects.Autofac;
@@ -12,9 +13,10 @@ using Business.ValidationRules.FluentValidation;
 
 namespace Business.Concrete
 {
-    public class ProductManager(IProductDal productDal) : IProductService
+    public class ProductManager(IProductDal productDal, ICategoryService categoryService) : IProductService
     {
         private readonly IProductDal _productDal = productDal;
+        private readonly ICategoryService _categoryService = categoryService;
 
         [SecuredOperation("Product.Add,Admin", Priority = 1)]
         [ValidationAspect(typeof(ProductValidator), Priority = 2)]
@@ -23,6 +25,11 @@ namespace Business.Concrete
         {
             try
             {
+                IResult result = BusinessRules.Run(CheckIfProductNameExists(product.ProductName), CheckIfProductIsEnabled());
+                if (result != null)
+                {
+                    return result;
+                }
                 _productDal.Add(product);
                 return new SuccessResult(Messages.ProductAdded);
             }
@@ -93,6 +100,26 @@ namespace Business.Concrete
             {
                 return new ErrorResult(Messages.ProductCouldNotBeUpdated);
             }
+        }
+
+        private IResult CheckIfProductNameExists(string productName)
+        {
+            var result = _productDal.GetList(x => x.ProductName == productName).Any();
+            if (result)
+            {
+                return new ErrorResult(Messages.ProductNameAlreadyExists);
+            }
+            return new SuccessResult();
+        }
+
+        private IResult CheckIfProductIsEnabled()
+        {
+            var result = _categoryService.GetList();
+            if (result.Data.Count < 10)
+            {
+                return new ErrorResult(Messages.ProductNameAlreadyExists);
+            }
+            return new SuccessResult();
         }
     }
 }

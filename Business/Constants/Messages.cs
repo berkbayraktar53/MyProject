@@ -23,5 +23,7 @@
         public readonly static string UserRegistered = "Kulanıcı kaydedildi.";
         public readonly static string AccessTokenCreated = "Access token oluşturuldu.";
         public readonly static string UserAlreadyExists = "Bu kullanıcı zaten mevcut.";
+        public readonly static string ProductNameAlreadyExists = "Ürün ismi zaten mevcut";
+        public readonly static string CategoryNameAlreadyExists = "Kategori ismi zaten mevcut";
     }
 }
